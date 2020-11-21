@@ -1,5 +1,5 @@
-var domino_sketch = function(p){
-    p.setup=function() {
+var domino_sketch = function (p) {
+    p.setup = function () {
         p.createCanvas(p.windowWidth * 0.9, p.windowHeight);
         p.scale(0.05)
         p.background(11);
@@ -9,14 +9,14 @@ var domino_sketch = function(p){
 
     p.angle = 0
 
-    p.hover = (new Domino(0, 0, p.angle, p))
+    p.hover = new Domino(0, 0, p.angle, p)
     p.dominos = []
 
     p.current = new Set()
     p.next = new Set()
     p.active = false
 
-    p.draw = function(){
+    p.draw = function () {
         p.background(11)
 
         p.hover.move(p.mouseX - p.cos(p.angle), p.mouseY - p.sin(p.angle), p.angle)
@@ -38,9 +38,9 @@ var domino_sketch = function(p){
     }
 
 
-        p.mouseClicked=function() {
-            p.dominos.push(new Domino(p.mouseX, p.mouseY, p.angle, p))
-        }
+    p.mouseClicked = function () {
+        p.dominos.push(new Domino(p.mouseX, p.mouseY, p.angle, p))
+    }
 
     document.addEventListener('keydown', function (event) {
         if (event.key === 'z') {
@@ -55,6 +55,7 @@ var domino_sketch = function(p){
         }
 
         if (event.key === "V") {
+            console.log('starting');
             fall_loop();
         }
 
@@ -96,7 +97,7 @@ var domino_sketch = function(p){
     }
 
     function reset() {
-        dominos.forEach(function (d) {
+        p.dominos.forEach(function (d) {
             d.reset();
         })
     }
@@ -105,37 +106,46 @@ var domino_sketch = function(p){
 var sketch = new p5(domino_sketch)
 
 
-function fall(){
+
+function fall() {
+    console.log('falling')
+    var count = 0;
     sketch.next = new Set()
-    count = 0;
-    sketch.current.forEach(function(d){
+    sketch.current.forEach(function (d) {
         d.topple()
-        neighbors = d.getNeighbors()
-        if(neighbors.size == 0){
+        var neighbors = d.getNeighbors()
+        if (neighbors.size === 0) {
             count++;
 
-            if(count == sketch.current.size){
+            if (count === sketch.current.size) {
                 end_fall();
+                count = 0;
+                sketch.current.clear();
+                console.log(sketch.current);
             }
+        } else {
+            neighbors.forEach(function (d) {
+                sketch.next.add(d)
+            });
         }
-        neighbors.forEach(function(d){
-            sketch.next.add(d)
-        });
-        
-        
     });
 
-    sketch.next.forEach(function(n){
+    sketch.current.clear();
+
+    sketch.next.forEach(function (n) {
         sketch.current.add(n)
     });
 
 }
 
-function fall_loop(){
+var intvl;
+
+function fall_loop() {
     sketch.current.add(sketch.dominos[0])
-    s = setInterval(fall, 300);
+    intvl = setInterval(fall, 300);
 }
 
-function end_fall(){
-    clearInterval(s)
+function end_fall() {
+    console.log('bye');
+    clearInterval(intvl);
 }

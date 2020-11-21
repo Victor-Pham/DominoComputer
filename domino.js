@@ -2,8 +2,8 @@ function Domino(x1, y1, angle1, p) {
     var x = x1
     var y = y1
     var angle = angle1
-    var toppled = false
     var neighbors = new Set()
+    this.toppled = false;
 
     this.draw = function (shadow, col) {
         p.push();
