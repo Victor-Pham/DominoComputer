@@ -1,129 +1,141 @@
-function setup() {
-    createCanvas(windowWidth * 0.9, windowHeight);
-    scale(0.05)
-    background(11);
-    frameRate(60);
-    cursor(CROSS)
+var domino_sketch = function(p){
+    p.setup=function() {
+        p.createCanvas(p.windowWidth * 0.9, p.windowHeight);
+        p.scale(0.05)
+        p.background(11);
+        p.frameRate(60);
+        p.cursor(p.CROSS)
+    }
 
-}
+    p.angle = 0
 
-domino_x = 100
-domino_y = 20
-domino_shadow = 80
-angle = 0
+    p.hover = (new Domino(0, 0, p.angle, p))
+    p.dominos = []
 
-hover = (new Domino(0, -domino_y, angle))
-dominos = []
+    p.current = new Set()
+    p.next = new Set()
+    p.active = false
 
-next = new Set()
-active = false
+    p.draw = function(){
+        p.background(11)
 
-function draw() {
-    background(11)
-    if (active) {
-        frameRate(16)
-        if (next.size > 0) {
-            next.forEach(function (d) {
-                topple(d)
-            })
-        } else {
-            active = false
-            frameRate(60)
+        p.hover.move(p.mouseX - p.cos(p.angle), p.mouseY - p.sin(p.angle), p.angle)
+
+        for (var i = p.dominos.length - 1; i >= 0; i--) {
+            if (i === p.dominos.length - 1)
+                p.dominos[i].draw(true)
+
+            if (hover_collision(i))
+                p.dominos[i].draw(false, true)
+
+            else
+                p.dominos[i].draw()
+
+            if (collision(i, p.dominos.length - 1))
+                p.dominos[i].addNeighbor(p.dominos[p.dominos.length - 1])
         }
-    } else {
-        hover.move(mouseX - cos(angle), mouseY - sin(angle), angle)
-    }
-    for (var i = dominos.length - 1; i >= 0; i--) {
-        if (i === dominos.length - 1)
-            dominos[i].draw(true)
-        if (hover_collision(i)) {
-            dominos[i].draw(false, true)
-        } else
-            dominos[i].draw()
-        if (collision(i, dominos.length - 1)) {
-            dominos[i].addNeighbor(dominos[dominos.length - 1])
 
+    }
+
+
+        p.mouseClicked=function() {
+            p.dominos.push(new Domino(p.mouseX, p.mouseY, p.angle, p))
         }
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'z') {
+            p.angle -= p.PI / 10
+        }
+        if (event.key === 'x') {
+            p.angle += p.PI / 10
+        }
+
+        if (event.key === "T") {
+            p.dominos.pop()
+        }
+
+        if (event.key === "V") {
+            fall_loop();
+        }
+
+        if (event.key === 'r') {
+            reset();
+        }
+    });
+
+    function hover_collision(n) {
+        r1x = p.dominos[n].getX()
+        r1y = p.dominos[n].getY()
+        r2x = p.mouseX
+        r2y = p.mouseY
+        r2w = 100
+        r1w = 100
+        r1h = 80
+        r2h = 80
+        return (r1x + r1w >= r2x && // r1 right edge past r2 left
+            r1x <= r2x + r2w && // r1 left edge past r2 right
+            r1y + r1h >= r2y && // r1 top edge past r2 bottom
+            r1y <= r2y + r2h // r1 bottom edge past r2 top)
+        )
     }
+
+    function collision(a, b) {
+        r1x = p.dominos[a].getX()
+        r1y = p.dominos[a].getY()
+        r2x = p.dominos[b].getX()
+        r2y = p.dominos[b].getY()
+        r1w = 100
+        r2w = 100
+        r1h = 80
+        r2h = 80
+        return (r1x + r1w >= r2x && // r1 right edge past r2 left
+            r1x <= r2x + r2w && // r1 left edge past r2 right
+            r1y + r1h >= r2y && // r1 top edge past r2 bottom
+            r1y <= r2y + r2h // r1 bottom edge past r2 top)
+        )
+    }
+
+    function reset() {
+        dominos.forEach(function (d) {
+            d.reset();
+        })
+    }
+}
+
+var sketch = new p5(domino_sketch)
+
+
+function fall(){
+    sketch.next = new Set()
+    count = 0;
+    sketch.current.forEach(function(d){
+        d.topple()
+        neighbors = d.getNeighbors()
+        if(neighbors.size == 0){
+            count++;
+
+            if(count == sketch.current.size){
+                end_fall();
+            }
+        }
+        neighbors.forEach(function(d){
+            sketch.next.add(d)
+        });
+        
+        
+    });
+
+    sketch.next.forEach(function(n){
+        sketch.current.add(n)
+    });
 
 }
 
-
-function mouseClicked() {
-    dominos.push(new Domino(mouseX, mouseY, angle))
+function fall_loop(){
+    sketch.current.add(sketch.dominos[0])
+    s = setInterval(fall, 300);
 }
 
-document.addEventListener('keydown', function (event) {
-    if (event.key === 'z') {
-        angle -= PI / 10
-    }
-    if (event.key === 'x') {
-        angle += PI / 10
-    }
-
-    if (event.key === "T") {
-        dominos.pop()
-    }
-
-    if (event.key === "V") {
-        activate()
-    }
-
-    if (event.key === 'r') {
-        reset();
-    }
-});
-
-function hover_collision(n) {
-    r1x = dominos[n].getX()
-    r1y = dominos[n].getY()
-    r2x = mouseX
-    r2y = mouseY
-    r2w = 100
-    r1w = 100
-    r1h = 80
-    r2h = 80
-    return (r1x + r1w >= r2x && // r1 right edge past r2 left
-        r1x <= r2x + r2w && // r1 left edge past r2 right
-        r1y + r1h >= r2y && // r1 top edge past r2 bottom
-        r1y <= r2y + r2h // r1 bottom edge past r2 top)
-    )
-}
-
-function collision(a, b) {
-    r1x = dominos[a].getX()
-    r1y = dominos[a].getY()
-    r2x = dominos[b].getX()
-    r2y = dominos[b].getY()
-    r1w = 100
-    r2w = 100
-    r1h = 80
-    r2h = 80
-    return (r1x + r1w >= r2x && // r1 right edge past r2 left
-        r1x <= r2x + r2w && // r1 left edge past r2 right
-        r1y + r1h >= r2y && // r1 top edge past r2 bottom
-        r1y <= r2y + r2h // r1 bottom edge past r2 top)
-    )
-}
-
-function activate() {
-    active = true
-    topple(dominos[0])
-}
-
-function topple(d) {
-    d.topple()
-    next.delete(d)
-    neighbors = d.getNeighbors()
-    print(neighbors.size)
-    neighbors.forEach(function (n) {
-        next.add(n)
-    })
-    print(next)
-}
-
-function reset() {
-    dominos.forEach(function (d) {
-        d.reset();
-    })
+function end_fall(){
+    clearInterval(s)
 }
