@@ -4,6 +4,7 @@ function Domino(x1, y1, angle1, p) {
     var angle = angle1
     var neighbors = new Set()
     var toppled = false;
+    var sideHit = false;
 
     this.draw = function (shadow, col) {
         p.push();
@@ -42,11 +43,19 @@ function Domino(x1, y1, angle1, p) {
         return angle;
     }
 
+    this.isSideHit = function () {
+        return sideHit;
+    }
+
+    this.hitSide = function () {
+        sideHit = true;
+    }
+
     this.move = function (xn, yn, anglen) {
         x = xn
         y = yn
         angle = anglen
-        this.draw(false, false);
+        this.draw(true, false);
 
     }
 
@@ -63,4 +72,11 @@ function Domino(x1, y1, angle1, p) {
         toppled = false;
     }
 
+    this.collide = function(other) {
+        var angleOther = other.getAngle();
+        var angleThis = angle;
+        var diff = Math.abs(angleOther-angleThis);
+        console.log(diff);
+        return diff === Math.PI/2;
+    }
 }

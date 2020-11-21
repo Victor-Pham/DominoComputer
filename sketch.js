@@ -7,6 +7,8 @@ var domino_sketch = function (p) {
         p.cursor(p.CROSS)
     }
 
+    p.debug = 0;
+
     p.angle = 0
 
     p.hover = new Domino(0, 0, p.angle, p)
@@ -17,22 +19,24 @@ var domino_sketch = function (p) {
     p.active = false
 
     p.draw = function () {
-        p.background(11)
+        if (p.debug === 0) {
+            p.background(11)
 
-        p.hover.move(p.mouseX - p.cos(p.angle), p.mouseY - p.sin(p.angle), p.angle)
+            p.hover.move(p.mouseX - p.cos(p.angle), p.mouseY - p.sin(p.angle), p.angle)
 
-        for (var i = p.dominos.length - 1; i >= 0; i--) {
-            if (i === p.dominos.length - 1)
-                p.dominos[i].draw(true)
-
-            if (hover_collision(i))
-                p.dominos[i].draw(false, true)
-
-            else
-                p.dominos[i].draw()
-
-            if (collision(i, p.dominos.length - 1))
-                p.dominos[i].addNeighbor(p.dominos[p.dominos.length - 1])
+            for (var i = p.dominos.length - 1; i >= 0; i--) {
+                if (i === p.dominos.length - 1)
+                    p.dominos[i].draw(true)
+                if (hover_collision(i))
+                    p.dominos[i].draw(false, true)
+                else
+                    p.dominos[i].draw()
+                if (collision(i, p.dominos.length - 1))
+                    p.dominos[i].addNeighbor(p.dominos[p.dominos.length - 1])
+            }
+        } else {
+            fill2(0);
+            p.noLoop();
         }
 
     }
@@ -64,36 +68,80 @@ var domino_sketch = function (p) {
         }
     });
 
+
+    function rotate(x, y, angle, cx, cy) {
+        var sinus = p.sin(-angle);
+        var cosinus = p.cos(-angle);
+
+        var tempX;
+        var tempY;
+
+        x = x - cx;
+        y = y - cy;
+
+        tempX = x * cosinus - y * sinus;
+        tempY = x * sinus + y * cosinus;
+
+        x = tempX + cx;
+        y = tempY + cy;
+
+        return [x, y];
+    }
+
     function hover_collision(n) {
-        r1x = p.dominos[n].getX()
-        r1y = p.dominos[n].getY()
-        r2x = p.mouseX
-        r2y = p.mouseY
+        r1x = p.dominos[n].getX();
+        r1y = p.dominos[n].getY();
+        domAng = p.dominos[n].getAngle();
+        r2x = p.mouseX;
+        r2y = p.mouseY;
+
+        res = rotate(r2x, r2y, domAng, r1x, r1y);
+        r2x = res[0];
+        r2y = res[1];
+
         r2w = 100
         r1w = 100
         r1h = 80
         r2h = 80
-        return (r1x + r1w >= r2x && // r1 right edge past r2 left
-            r1x <= r2x + r2w && // r1 left edge past r2 right
-            r1y + r1h >= r2y && // r1 top edge past r2 bottom
-            r1y <= r2y + r2h // r1 bottom edge past r2 top)
-        )
+        return (r2x >= r1x - 100 && r2x <= r1x +100 &&
+            r2y >= r1y && r2y <= r1y + 80)
+    }
+
+    function fill2(n) {
+        //p.windowWidth * 0.9, p.windowHeight
+        for (var x = 0; x <= p.windowWidth * 0.9; x+= 10) {
+            for (var y = 0; y <= p.windowHeight; y+= 10) {
+                if (hover_collision2(n, x, y)) {
+                    p.push();
+                    p.stroke(0, 255, 0);
+                    p.strokeWeight(10);
+                    p.point(x, y);
+                    console.log('test')
+                    p.pop();
+                } else {
+                    p.fill('rgb(100%,0%,10%)');
+                }
+            }
+        }
     }
 
     function collision(a, b) {
-        r1x = p.dominos[a].getX()
-        r1y = p.dominos[a].getY()
+        r1x = p.dominos[a].getX();
+        r1y = p.dominos[a].getY();
+        domAng = p.dominos[a].getAngle();
         r2x = p.dominos[b].getX()
         r2y = p.dominos[b].getY()
-        r1w = 100
+
+        res = rotate(r2x, r2y, domAng, r1x, r1y);
+        r2x = res[0];
+        r2y = res[1];
+
         r2w = 100
+        r1w = 100
         r1h = 80
         r2h = 80
-        return (r1x + r1w >= r2x && // r1 right edge past r2 left
-            r1x <= r2x + r2w && // r1 left edge past r2 right
-            r1y + r1h >= r2y && // r1 top edge past r2 bottom
-            r1y <= r2y + r2h // r1 bottom edge past r2 top)
-        )
+        return (r2x >= r1x - 100 && r2x <= r1x +100 &&
+            r2y >= r1y && r2y <= r1y + 80)
     }
 
     function reset() {
@@ -105,28 +153,34 @@ var domino_sketch = function (p) {
 
 var sketch = new p5(domino_sketch)
 
-function fall(){
+function fall() {
     sketch.next.clear()
     count = 0;
-    sketch.current.forEach(function(d){
-        d.topple()
-        var neighbors = d.getNeighbors()
-        if (neighbors.size === 0) {
-            count++;
+    sketch.current.forEach(function (d) {
+        if (!d.isSideHit()) {
+            d.topple()
+            var neighbors = d.getNeighbors()
+            if (neighbors.size === 0) {
+                count++;
 
-            if (count === sketch.current.size) {
-                end_fall();
-                count = 0;
-                sketch.current.clear();
-                console.log(sketch.current);
+                if (count === sketch.current.size) {
+                    end_fall();
+                    count = 0;
+                    sketch.current.clear();
+                    console.log(sketch.current);
+                }
+            } else {
+                neighbors.forEach(function (n) {
+                    console.log(d.collide(n));
+                    if (d.collide(n)) {
+                        n.hitSide();
+                    }
+                    sketch.next.add(n);
+                });
             }
-        } else {
-            neighbors.forEach(function (d) {
-                sketch.next.add(d)
-            });
         }
     });
-    
+
     sketch.current.clear()
 
     sketch.current.clear();
@@ -143,7 +197,7 @@ function fall_loop() {
     intvl = setInterval(fall, 300);
 }
 
-function end_fall(){
+function end_fall() {
     console.log("stopping")
     clearInterval(intvl)
 }
