@@ -106,7 +106,7 @@ var sketch = new p5(domino_sketch)
 
 
 function fall(){
-    sketch.next = new Set()
+    sketch.next.clear()
     count = 0;
     sketch.current.forEach(function(d){
         d.topple()
@@ -124,11 +124,12 @@ function fall(){
         
         
     });
+    
+    sketch.current.clear()
 
     sketch.next.forEach(function(n){
         sketch.current.add(n)
     });
-
 }
 
 function fall_loop(){
@@ -137,5 +138,6 @@ function fall_loop(){
 }
 
 function end_fall(){
+    console.log("stopping")
     clearInterval(s)
 }

@@ -13,7 +13,7 @@ function Domino(x1, y1, angle1, p) {
             p.fill(180, 180, 180)
         p.translate(x, y)
         p.rotate(angle)
-        if (this.toppled === true) {
+        if (toppled === true) {
             p.rect(0, 0, 100, 80)
         } else {
             p.rect(0, 0, 100, 20)
@@ -27,7 +27,7 @@ function Domino(x1, y1, angle1, p) {
     };
 
     this.topple = function () {
-        this.toppled = true
+        toppled = true
     };
 
     this.getX = function () {
@@ -42,21 +42,12 @@ function Domino(x1, y1, angle1, p) {
         return angle;
     }
 
-    this.move = function (x, y, angle) {
-        this.x = x
-        this.y = y
-        this.angle = angle
+    this.move = function (xn, yn, anglen) {
+        x = xn
+        y = yn
+        angle = anglen
         this.draw(false, false);
-         p.push()
-         p.fill(180, 180, 180)
-         p.translate(x, y)
-         p.rotate(angle)
-        
-         p.rect(0, 0, 100, 20)
-        
-         p.fill(180, 180, 180, 40)
-         p.rect(0, 0, 100, 80)
-         p.pop();
+
     }
 
     this.addNeighbor = function (n) {
