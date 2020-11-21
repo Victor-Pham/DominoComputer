@@ -76,6 +76,7 @@ function Domino(x1, y1, angle1, p) {
 
     this.reset = function () {
         toppled = false;
+        sideHit = false;
     }
 
     this.setStarting = function(bool) {
@@ -89,7 +90,6 @@ function Domino(x1, y1, angle1, p) {
         var angleOther = other.getAngle();
         var angleThis = angle;
         var diff = Math.abs(angleOther - angleThis);
-        console.log(diff);
         return diff >= Math.PI / 2 - .1 && diff <= Math.PI / 2 + .1;
     }
 }

@@ -201,7 +201,6 @@ function fall() {
                 }
             } else {
                 neighbors.forEach(function (n) {
-                    console.log(d.collide(n));
                     if (d.collide(n)) {
                         n.hitSide();
                     }
@@ -218,9 +217,12 @@ function fall() {
     });
 }
 
-var intvl;
+var intvl = null;
 
 function fall_loop() {
+    if (intvl !== null) {
+        clearInterval(intvl);
+    }
     for (var i = 0; i < sketch.dominos.length; i++) {
         if (sketch.dominos[i].isStarting()) {
             sketch.current.add(sketch.dominos[i])
