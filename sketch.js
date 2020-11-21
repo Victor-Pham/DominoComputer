@@ -145,5 +145,5 @@ function fall_loop() {
 
 function end_fall(){
     console.log("stopping")
-    clearInterval(s)
+    clearInterval(intvl)
 }

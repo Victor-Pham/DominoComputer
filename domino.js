@@ -3,7 +3,7 @@ function Domino(x1, y1, angle1, p) {
     var y = y1
     var angle = angle1
     var neighbors = new Set()
-    this.toppled = false;
+    var toppled = false;
 
     this.draw = function (shadow, col) {
         p.push();
@@ -60,7 +60,7 @@ function Domino(x1, y1, angle1, p) {
     }
 
     this.reset = function () {
-        this.toppled = false;
+        toppled = false;
     }
 
 }
