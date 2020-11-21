@@ -13,6 +13,7 @@ var domino_sketch = function (p) {
 
     p.hover = new Domino(0, 0, p.angle, p)
     p.dominos = []
+    p.starting = [];
 
     p.current = new Set()
     p.next = new Set()
@@ -43,7 +44,12 @@ var domino_sketch = function (p) {
 
 
     p.mouseClicked = function () {
-        p.dominos.push(new Domino(p.mouseX, p.mouseY, p.angle, p))
+        var i = isOnDomino();
+        if (i !== -1) {
+            p.dominos[i].setStarting(!p.dominos[i].isStarting());
+        } else {
+            p.dominos.push(new Domino(p.mouseX, p.mouseY, p.angle, p));
+        }
     }
 
     document.addEventListener('keydown', function (event) {
@@ -103,14 +109,38 @@ var domino_sketch = function (p) {
         r1w = 100
         r1h = 80
         r2h = 80
-        return (r2x >= r1x - 100 && r2x <= r1x +100 &&
+        return (r2x >= r1x - 100 && r2x <= r1x + 100 &&
             r2y >= r1y && r2y <= r1y + 80)
+    }
+
+    function selectDomino(n) {
+        r1x = p.dominos[n].getX();
+        r1y = p.dominos[n].getY();
+        domAng = p.dominos[n].getAngle();
+        r2x = p.mouseX;
+        r2y = p.mouseY;
+
+        res = rotate(r2x, r2y, domAng, r1x, r1y);
+        r2x = res[0];
+        r2y = res[1];
+
+        return (r2x >= r1x && r2x <= r1x + 100 &&
+            r2y >= r1y && r2y <= r1y + 20)
+    }
+
+    function isOnDomino() {
+        for (var i = 0; i < p.dominos.length; i++) {
+            if (selectDomino(i)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     function fill2(n) {
         //p.windowWidth * 0.9, p.windowHeight
-        for (var x = 0; x <= p.windowWidth * 0.9; x+= 10) {
-            for (var y = 0; y <= p.windowHeight; y+= 10) {
+        for (var x = 0; x <= p.windowWidth * 0.9; x += 10) {
+            for (var y = 0; y <= p.windowHeight; y += 10) {
                 if (hover_collision2(n, x, y)) {
                     p.push();
                     p.stroke(0, 255, 0);
@@ -140,7 +170,7 @@ var domino_sketch = function (p) {
         r1w = 100
         r1h = 80
         r2h = 80
-        return (r2x >= r1x - 100 && r2x <= r1x +100 &&
+        return (r2x >= r1x - 100 && r2x <= r1x + 100 &&
             r2y >= r1y && r2y <= r1y + 80)
     }
 
@@ -155,7 +185,7 @@ var sketch = new p5(domino_sketch)
 
 function fall() {
     sketch.next.clear()
-    count = 0;
+    var count = 0;
     sketch.current.forEach(function (d) {
         if (!d.isSideHit()) {
             d.topple()
@@ -181,8 +211,6 @@ function fall() {
         }
     });
 
-    sketch.current.clear()
-
     sketch.current.clear();
 
     sketch.next.forEach(function (n) {
@@ -193,7 +221,12 @@ function fall() {
 var intvl;
 
 function fall_loop() {
-    sketch.current.add(sketch.dominos[0])
+    for (var i = 0; i < sketch.dominos.length; i++) {
+        if (sketch.dominos[i].isStarting()) {
+            sketch.current.add(sketch.dominos[i])
+        }
+    }
+
     intvl = setInterval(fall, 300);
 }
 

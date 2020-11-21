@@ -5,13 +5,19 @@ function Domino(x1, y1, angle1, p) {
     var neighbors = new Set()
     var toppled = false;
     var sideHit = false;
+    var starting = false;
 
     this.draw = function (shadow, col) {
         p.push();
         if (col)
             p.fill(128, 160, 82)
-        else
-            p.fill(180, 180, 180)
+        else {
+            if (starting) {
+                p.fill(12, 10, 240);
+            } else {
+                p.fill(180, 180, 180)
+            }
+        }
         p.translate(x, y)
         p.rotate(angle)
         if (toppled === true) {
@@ -72,11 +78,18 @@ function Domino(x1, y1, angle1, p) {
         toppled = false;
     }
 
-    this.collide = function(other) {
+    this.setStarting = function(bool) {
+        starting = bool;
+    }
+
+    this.isStarting = function() {
+        return starting;
+    }
+    this.collide = function (other) {
         var angleOther = other.getAngle();
         var angleThis = angle;
-        var diff = Math.abs(angleOther-angleThis);
+        var diff = Math.abs(angleOther - angleThis);
         console.log(diff);
-        return diff === Math.PI/2;
+        return diff >= Math.PI / 2 - .1 && diff <= Math.PI / 2 + .1;
     }
 }
