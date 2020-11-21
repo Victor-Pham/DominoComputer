@@ -21,13 +21,13 @@ function Domino(x1, y1, angle1, p) {
         p.translate(x, y)
         p.rotate(angle)
         if (toppled === true) {
-            p.rect(0, 0, 100, 80)
+            p.rect(0, 0, DOMINO_WIDTH, DOMINO_SHADOW)
         } else {
-            p.rect(0, 0, 100, 20)
+            p.rect(0, 0, DOMINO_WIDTH, DOMINO_HEIGHT)
 
             if (shadow) {
                 p.fill(180, 180, 180, 40)
-                p.rect(0, 0, 100, 80)
+                p.rect(0, 0, DOMINO_WIDTH, DOMINO_SHADOW)
             }
         }
         p.pop();

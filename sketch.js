@@ -1,6 +1,10 @@
+var DOMINO_WIDTH = 100;
+var DOMINO_HEIGHT = 20;
+var DOMINO_SHADOW = 80;
+
 var domino_sketch = function (p) {
     p.setup = function () {
-        p.createCanvas(p.windowWidth * 0.9, p.windowHeight);
+        p.createCanvas(p.windowWidth, p.windowHeight);
         p.scale(0.05)
         p.background(11);
         p.frameRate(60);
@@ -105,12 +109,8 @@ var domino_sketch = function (p) {
         r2x = res[0];
         r2y = res[1];
 
-        r2w = 100
-        r1w = 100
-        r1h = 80
-        r2h = 80
-        return (r2x >= r1x - 100 && r2x <= r1x + 100 &&
-            r2y >= r1y && r2y <= r1y + 80)
+        return (r2x >= r1x - DOMINO_WIDTH && r2x <= r1x + DOMINO_WIDTH &&
+            r2y >= r1y && r2y <= r1y + DOMINO_SHADOW)
     }
 
     function selectDomino(n) {
@@ -124,8 +124,8 @@ var domino_sketch = function (p) {
         r2x = res[0];
         r2y = res[1];
 
-        return (r2x >= r1x && r2x <= r1x + 100 &&
-            r2y >= r1y && r2y <= r1y + 20)
+        return (r2x >= r1x && r2x <= r1x + DOMINO_WIDTH &&
+            r2y >= r1y && r2y <= r1y + DOMINO_HEIGHT)
     }
 
     function isOnDomino() {
@@ -166,12 +166,8 @@ var domino_sketch = function (p) {
         r2x = res[0];
         r2y = res[1];
 
-        r2w = 100
-        r1w = 100
-        r1h = 80
-        r2h = 80
-        return (r2x >= r1x - 100 && r2x <= r1x + 100 &&
-            r2y >= r1y && r2y <= r1y + 80)
+        return (r2x >= r1x - DOMINO_WIDTH && r2x <= r1x + DOMINO_WIDTH &&
+            r2y >= r1y && r2y <= r1y + DOMINO_SHADOW)
     }
 
     function reset() {
