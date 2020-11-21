@@ -105,13 +105,10 @@ var domino_sketch = function (p) {
 
 var sketch = new p5(domino_sketch)
 
-
-
-function fall() {
-    console.log('falling')
-    var count = 0;
-    sketch.next = new Set()
-    sketch.current.forEach(function (d) {
+function fall(){
+    sketch.next.clear()
+    count = 0;
+    sketch.current.forEach(function(d){
         d.topple()
         var neighbors = d.getNeighbors()
         if (neighbors.size === 0) {
@@ -129,13 +126,14 @@ function fall() {
             });
         }
     });
+    
+    sketch.current.clear()
 
     sketch.current.clear();
 
     sketch.next.forEach(function (n) {
         sketch.current.add(n)
     });
-
 }
 
 var intvl;
@@ -145,7 +143,7 @@ function fall_loop() {
     intvl = setInterval(fall, 300);
 }
 
-function end_fall() {
-    console.log('bye');
-    clearInterval(intvl);
+function end_fall(){
+    console.log("stopping")
+    clearInterval(s)
 }
