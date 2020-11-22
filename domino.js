@@ -1,3 +1,4 @@
+$('#exampleModal').modal('show')
 function Domino(x1, y1, angle1, p) {
     var x = x1
     var y = y1
