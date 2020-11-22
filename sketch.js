@@ -76,6 +76,10 @@ var domino_sketch = function (p) {
         if (event.key === 'r') {
             reset();
         }
+
+        if (event.key === '?') {
+            $('#exampleModal').modal('show');
+        }
     });
 
 

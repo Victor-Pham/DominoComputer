@@ -16,8 +16,6 @@
   <!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
   <script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
 
-
-
 </head>
 
 <body>
@@ -26,17 +24,55 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <h2 class="modal-title" id="exampleModalLabel">Domino Computer Command</h2>
       </div>
       <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <table class="table table-dark">
+          <thead>
+            <tr>
+              <th scope="col">Command</th>
+              <th scope="col">Functionality</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">?</th>
+              <td>Display command window</td>
+            </tr>
+            <tr>
+              <th scope="row">Esc</th>
+              <td>Close command prompt window</td>
+            </tr>
+            <tr>
+              <th scope="row">Click anywhere</th>
+              <td>Place a domino at that location</td>
+            </tr>
+            <tr>
+              <th scope="row">Click on a placed domino</th>
+              <td>Toggle whether or not it's a starting domino</td>
+            </tr>
+            <tr>
+              <th scope="row">Z</th>
+              <td>Rotate the position of upcoming domino left</td>
+            </tr>
+            <tr>
+              <th scope="row">X</th>
+              <td>Rotate the position of upcoming domino right</td>
+            </tr>
+            <tr>
+              <th scope="row">Shift+V</th>
+              <td>Start animation</td>
+            </tr>
+            <tr>
+              <th scope="row">Shit+T</th>
+              <td>Undo</td>
+            </tr>
+            <tr>
+              <th scope="row">R</th>
+              <td>Restart</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
