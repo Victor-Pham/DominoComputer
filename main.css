@@ -1,0 +1,92 @@
+.header {
+    margin-top:-10px;
+    margin: -5px;
+    padding: 0;
+    display:flex;
+    background-color: #111;
+    justify-content: space-between;
+}
+
+.header text, .header p {
+    padding-left: 1rem;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    padding-right: 1rem;
+    font-size: 1.4rem;
+    color: white;
+}
+
+.header p {
+    font-size: 1rem;
+}
+
+.title {
+    text-align: center;
+}
+
+.title h1 {
+    font-size: 50px;
+}
+
+body{
+    font-family: 'Playfair Display', serif;
+    background-color: #fff;
+}
+
+p {
+    font-size: 1.2rem;
+}
+
+a {
+    color:black;
+}
+.container{
+    display:flex;
+    justify-content: center;
+    margin: 3rem;
+    margin-left:3rem;
+    margin-right: 3rem;
+    padding: 4rem;
+}
+
+h2 {
+    font-size: 48px;
+    margin-bottom: 0;
+    margin-top:0;
+}
+
+.gate {
+    margin: auto 0.5rem auto auto;
+    padding:auto;
+    max-width: 25rem
+
+}
+
+.sketch-holder{
+    margin: auto auto auto 0.5rem;
+    padding:auto;
+}
+
+table, th, td {
+    padding:auto;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th,td {
+    font-size: 1.3rem;
+    text-align: center;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+tr:hover{
+    cursor: pointer;
+    background-color: rgb(221, 221, 221);
+}
+
+
+
+

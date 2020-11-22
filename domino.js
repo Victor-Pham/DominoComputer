@@ -13,7 +13,7 @@ function Domino(x1, y1, angle1, p) {
             p.fill(128, 160, 82)
         else {
             if (starting) {
-                p.fill(12, 10, 240);
+                p.fill(132, 182, 220);
             } else {
                 p.fill(180, 180, 180)
             }
@@ -74,6 +74,9 @@ function Domino(x1, y1, angle1, p) {
         return neighbors
     }
 
+    this.removeNeighbor = function(n){
+        neighbors.delete(n)
+    }
     this.reset = function () {
         toppled = false;
         sideHit = false;
